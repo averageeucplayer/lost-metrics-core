@@ -13,7 +13,7 @@ A library containing Rust type definitions extracted from [Loa logs](https://git
 git clone https://github.com/averageeucplayer/lost-metrics-core.git
 ```
 
-## Add to Cargo.toml
+### 2️⃣ Add to Cargo.toml
 
 ```toml
 [dependencies]
