@@ -39,7 +39,7 @@ pub enum EntityType {
     Summon,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct Npc {
     pub id: i32,
     pub name: Option<String>,
@@ -48,7 +48,7 @@ pub struct Npc {
     pub npc_type: String,
 }
 
-#[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(Debug, Display, Default, Serialize, Deserialize, PartialEq, Eq, Hash, Copy, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum NpcGrade {
     #[default]
@@ -90,7 +90,7 @@ impl Npc {
     }
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct Esther {
     pub name: String,
     pub icon: String,

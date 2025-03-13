@@ -18,4 +18,6 @@ git clone https://github.com/averageeucplayer/lost-metrics-core.git
 ```toml
 [dependencies]
 lost-metrics-core = { git = "https://github.com/averageeucplayer/lost-metrics-core" }
+lost-metrics-core = { git = "https://github.com/averageeucplayer/lost-metrics-core", branch="main" }
+lost-metrics-core = { git = "https://github.com/averageeucplayer/lost-metrics-core", tag="v1.0.0" }
 ```

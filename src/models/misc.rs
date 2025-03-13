@@ -1,5 +1,8 @@
+use std::mem::transmute;
+
 use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct DamageData {
@@ -50,7 +53,7 @@ pub enum IncapacitationEventType {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct LocalInfo {
-    pub client_id: String,
+    pub client_id: Uuid,
     pub local_players: HashMap<u64, LocalPlayer>,
 }
 
@@ -64,32 +67,43 @@ pub struct LocalPlayer {
 #[derive(Debug, PartialEq)]
 #[repr(i32)]
 pub enum HitOption {
-    None,
-    BackAttack,
-    FrontalAttack,
-    FlankAttack,
-    Max,
+    None = 0,
+    BackAttack = 1,
+    FrontalAttack = 2,
+    FlankAttack = 3,
+    Max = 4,
+}
+
+impl From<i32> for HitOption {
+    fn from(value: i32) -> Self {
+        unsafe { transmute(value) }
+    }
 }
 
 #[derive(Debug, PartialEq)]
 #[repr(u32)]
 pub enum HitFlag {
-    Normal,
-    Critical,
-    Miss,
-    Invincible,
-    DamageOverTime,
-    Immune,
-    ImmuneSilenced,
-    FontSilence,
-    DamageOverTimeCritical,
-    Dodge,
-    Reflect,
-    DamageShare,
-    DodgeHit,
-    Max,
+    Normal = 0,
+    Critical = 1,
+    Miss = 2,
+    Invincible = 3,
+    DamageOverTime = 4,
+    Immune = 5,
+    ImmuneSilenced = 6,
+    FontSilence = 7,
+    DamageOverTimeCritical = 8,
+    Dodge = 9,
+    Reflect = 10,
+    DamageShare = 11,
+    DodgeHit = 12,
+    Max = 13,
 }
 
+impl From<i32> for HitFlag {
+    fn from(value: i32) -> Self {
+        unsafe { transmute(value) }
+    }
+}
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
@@ -102,7 +116,7 @@ pub struct SkillFeatureOption {
     pub param: Vec<i32>,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PassiveOption {
     #[serde(rename(deserialize = "type"))]

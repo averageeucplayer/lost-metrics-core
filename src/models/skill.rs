@@ -127,7 +127,7 @@ impl PartialEq for TripodIndex {
 
 impl Eq for TripodIndex {}
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SkillEffectData {
     pub id: i32,
@@ -142,7 +142,7 @@ pub struct SkillEffectData {
     pub icon: Option<String>,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SkillBuffData {
     pub id: i32,

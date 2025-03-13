@@ -1,12 +1,12 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct CombatEffectData {
     pub effects: Vec<CombatEffectDetail>,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct CombatEffectDetail {
     pub ratio: i32,
     pub cooldown: i32,
@@ -14,7 +14,7 @@ pub struct CombatEffectDetail {
     pub actions: Vec<CombatEffectAction>,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct CombatEffectCondition {
     #[serde(rename(deserialize = "type"))]
@@ -23,7 +23,7 @@ pub struct CombatEffectCondition {
     pub arg: i32,
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct CombatEffectAction {
     pub action_type: String,
