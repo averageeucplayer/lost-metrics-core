@@ -6,6 +6,7 @@ use serde_with::DefaultOnError;
 use super::entity::EntityType;
 use super::player::ArkPassiveData;
 use super::skill::Skill;
+use super::Entity;
 use super::{encounter::EncounterMisc, misc::IncapacitatedEvent, status_effect::StatusEffect};
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -71,6 +72,37 @@ pub struct EncounterEntity {
     pub ark_passive_active: Option<bool>,
     pub ark_passive_data: Option<ArkPassiveData>,
     pub spec: Option<String>,
+}
+
+impl EncounterEntity {
+    pub fn is_valid(&self) -> bool {
+        ((self.entity_type == EntityType::Player && self.class_id > 0)
+        || self.entity_type == EntityType::Esther
+        || self.entity_type == EntityType::Boss)
+        && self.damage_stats.damage_dealt > 0
+    }
+
+    pub fn is_valid_player(&self) -> bool {
+        self.gear_score >= 0.0
+            && self.entity_type == EntityType::Player
+            && self.character_id != 0
+            && self.class_id != 0
+            && self.name != "You"
+            && self
+                .name
+                .chars()
+                .next()
+                .unwrap_or_default()
+                .is_uppercase()
+    }
+
+    pub fn update(&mut self, new: &Entity) {
+        self.id = new.id;
+        self.character_id = new.character_id;
+        self.name.clone_from(&new.name);
+        self.class_id = new.class_id;
+        self.gear_score = new.gear_level;
+    }
 }
 
 #[derive(Debug, Serialize, Clone, Default)]

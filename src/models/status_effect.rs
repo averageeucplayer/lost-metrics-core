@@ -110,3 +110,10 @@ pub struct StatusEffectDetails {
     pub timestamp: DateTime<Utc>,
     pub name: String,
 }
+
+impl StatusEffectDetails {
+    pub fn is_infinite(&self) -> bool {
+        // infinite if duration is (sub-)zero or longer than an hour
+        self.expiration_delay <= 0.0 || self.expiration_delay > 3600.0
+    }
+}
