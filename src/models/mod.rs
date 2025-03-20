@@ -9,6 +9,8 @@ mod encounter;
 mod utils;
 mod summary;
 mod combat_effect;
+mod encounter_entity;
+mod stats_api;
 
 pub use entity::*;
 pub use settings::*;
@@ -21,3 +23,5 @@ pub use encounter::*;
 pub use utils::*;
 pub use summary::*;
 pub use combat_effect::*;
+pub use encounter_entity::*;
+pub use stats_api::*;

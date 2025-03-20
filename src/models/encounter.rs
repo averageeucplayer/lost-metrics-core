@@ -2,7 +2,7 @@ use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 
-use super::stats::{BossHpLog, EncounterDamageStats, EncounterEntity, StaggerStats};
+use super::{stats::{BossHpLog, EncounterDamageStats, StaggerStats}, EncounterEntity};
 
 #[derive(Debug, Serialize, Clone, Default)]
 #[serde(rename_all = "camelCase")]

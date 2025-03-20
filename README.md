@@ -1,5 +1,6 @@
 ![rustc](https://img.shields.io/badge/rustc-1.85.0-blue.svg)
 [![codecov](https://codecov.io/gh/averageeucplayer/lost-metrics-core/graph/badge.svg?token=HHRGYYUNM2)](https://codecov.io/gh/averageeucplayer/lost-metrics-core)
+![CI](https://github.com/averageeucplayer/lost-metrics-core/actions/workflows/ci.yml/badge.svg)
 
 # 📜 Lost Metrics Core  
 
