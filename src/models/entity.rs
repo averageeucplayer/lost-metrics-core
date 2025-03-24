@@ -44,26 +44,28 @@ pub struct Npc {
     pub id: i32,
     pub name: Option<String>,
     pub grade: NpcGrade,
+    #[serde(rename = "hpBars")]
+    pub hp_bars: u16,
     #[serde(rename = "type")]
     pub npc_type: String,
 }
 
-#[derive(Debug, Display, Default, Serialize, Deserialize, PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(Debug, Display, Default, Serialize, Deserialize, PartialEq, Eq, Hash, Copy, Clone, PartialOrd, Ord)]
 #[serde(rename_all = "lowercase")]
 pub enum NpcGrade {
     #[default]
-    None,
-    Normal,
-    Boss,
-    Elite,
-    Commander,
-    Lucky,
-    Raid,
+    None = 0,
+    Normal = 1,
+    Named = 2,
+    Underling = 3,
+    Lucky = 4,
+    Seed = 5,
+    Elite = 6,
+    Commander = 7,
+    Raid = 8,
+    Boss = 9,
     #[serde(rename = "epic_raid")]
-    EpicRaid,
-    Named,
-    Underling,
-    Seed
+    EpicRaid = 10,
 }
 
 impl Npc {
