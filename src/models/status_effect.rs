@@ -74,6 +74,18 @@ pub enum StatusEffectBuffCategory {
     Elixir = 4,
 }
 
+impl From<&str> for StatusEffectBuffCategory {
+    fn from(value: &str) -> Self {
+        match value {
+            "bracelet" => StatusEffectBuffCategory::Bracelet,
+            "etc" => StatusEffectBuffCategory::Etc,
+            "battleitem" => StatusEffectBuffCategory::BattleItem,
+            "elixir" => StatusEffectBuffCategory::Elixir,
+            _ => StatusEffectBuffCategory::Other,
+        }
+    }
+}
+
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
 pub enum StatusEffectShowType {
     #[default]
@@ -94,6 +106,8 @@ pub struct StatusEffectDetails {
     pub instance_id: u32,
     pub status_effect_id: u32,
     pub custom_id: u32,
+
+    /// Character Id
     pub target_id: u64,
     pub source_id: u64,
     pub target_type: StatusEffectTargetType,

@@ -2,6 +2,7 @@ use hashbrown::{HashMap, HashSet};
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
+use std::fmt::{self, Display, Formatter};
 
 use super::entity::EntityType;
 use super::player::ArkPassiveData;
@@ -34,6 +35,42 @@ pub struct EncounterEntity {
     pub ark_passive_active: Option<bool>,
     pub ark_passive_data: Option<ArkPassiveData>,
     pub spec: Option<String>,
+}
+
+impl Display for EncounterEntity {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} [{}] (ID: {}, Class: {}, Gear: {:.1}, Type: {:?})",
+            self.name,
+            if self.is_dead { "Dead" } else { "Alive" },
+            self.id,
+            self.class_id,
+            self.gear_score,
+            self.entity_type
+        )
+    }
+}
+
+impl From<&Entity> for EncounterEntity {
+    fn from(entity: &Entity) -> Self {
+        let mut encounter_entity = EncounterEntity {
+            id: entity.id,
+            name: entity.name.clone(),
+            entity_type: entity.entity_type,
+            npc_id: entity.npc_id,
+            class_id: entity.class_id,
+            class: entity.class_id.to_string(),
+            gear_score: entity.gear_level,
+            ..Default::default()
+        };
+
+        if entity.character_id > 0 {
+            encounter_entity.character_id = entity.character_id;
+        }
+
+        encounter_entity
+    }
 }
 
 impl EncounterEntity {
@@ -78,5 +115,32 @@ impl EncounterEntity {
         self.name.clone_from(&new.name);
         self.class_id = new.class_id;
         self.gear_score = new.gear_level;
+    }
+
+    pub fn cap_incapacitation_durations_to_death_time(&mut self) {
+        self
+            .damage_stats
+            .incapacitations
+            .iter_mut()
+            .rev()
+            .take_while(|x| x.timestamp + x.duration > self.damage_stats.death_time)
+            .for_each(|x| {
+                // cap duration to death time if it exceeds it
+                x.duration = x.timestamp - self.damage_stats.death_time;
+            });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_return_true_valid_npc() {
+        let mut entity = EncounterEntity::default();
+        entity.entity_type = EntityType::Boss;
+        entity.damage_stats.damage_dealt = 1;
+
+        assert!(entity.is_valid());
     }
 }

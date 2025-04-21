@@ -1,12 +1,13 @@
-use std::fmt::Display;
 use std::str::FromStr;
 use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
+use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, Default, Clone)]
 pub struct Entity {
     pub id: u64,
+    pub is_local_player: bool,
     pub entity_type: EntityType,
     pub name: String,
     pub npc_id: u32,
@@ -22,6 +23,20 @@ pub struct Entity {
     pub push_immune: bool,
     pub level: u16,
     pub balance_level: u16,
+}
+
+impl Display for Entity {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} (ID: {}, Class: {}, Type: {}{:?})",
+            self.name,
+            self.id,
+            self.class_id,
+            if self.is_local_player { "Local " } else { "" },
+            self.entity_type,
+        )
+    }
 }
 
 #[derive(Display, Debug, EnumString, Default, Serialize, Deserialize, PartialEq, Copy, Clone)]
