@@ -59,8 +59,8 @@ impl From<&Entity> for EncounterEntity {
             name: entity.name.clone(),
             entity_type: entity.entity_type,
             npc_id: entity.npc_id,
-            class_id: entity.class_id,
-            class: entity.class_id.to_string(),
+            class_id: entity.class_id as u32,
+            class: entity.class_id.as_ref().to_string(),
             gear_score: entity.gear_level,
             ..Default::default()
         };
@@ -70,6 +70,12 @@ impl From<&Entity> for EncounterEntity {
         }
 
         encounter_entity
+    }
+}
+
+impl From<Entity> for EncounterEntity {
+    fn from(entity: Entity) -> Self {
+        EncounterEntity::from(&entity)
     }
 }
 
@@ -113,7 +119,7 @@ impl EncounterEntity {
         self.id = new.id;
         self.character_id = new.character_id;
         self.name.clone_from(&new.name);
-        self.class_id = new.class_id;
+        self.class_id = new.class_id as u32;
         self.gear_score = new.gear_level;
     }
 

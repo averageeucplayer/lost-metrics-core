@@ -12,8 +12,10 @@ mod combat_effect;
 mod encounter_entity;
 mod stats_api;
 mod class;
+mod class_skills;
 
 pub use class::Class;
+pub use class_skills::*;
 pub use entity::*;
 pub use settings::*;
 pub use skill::*;

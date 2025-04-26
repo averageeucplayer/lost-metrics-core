@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
 use std::fmt::{self, Display, Formatter};
 
+use super::Class;
+
 #[derive(Debug, Default, Clone)]
 pub struct Entity {
     pub id: u64,
@@ -11,7 +13,7 @@ pub struct Entity {
     pub entity_type: EntityType,
     pub name: String,
     pub npc_id: u32,
-    pub class_id: u32,
+    pub class_id: Class,
     pub gear_level: f32,
     pub character_id: u64,
     pub owner_id: u64,
@@ -29,10 +31,11 @@ impl Display for Entity {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{} (ID: {}, Class: {}, Type: {}{:?})",
+            "{} (ID: {}, Class: {}, CharacterId: {}, Type: {}{:?})",
             self.name,
             self.id,
-            self.class_id,
+            self.class_id.as_ref(),
+            self.character_id,
             if self.is_local_player { "Local " } else { "" },
             self.entity_type,
         )
@@ -100,7 +103,7 @@ impl Npc {
             let contains_underscore = name.contains('_');
             let all_ascii = name.chars().all(|c| c.is_ascii());
 
-            return contains_underscore && all_ascii;
+            return !contains_underscore && all_ascii;
         }
         
         false

@@ -4,16 +4,37 @@ use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+use super::{Entity, StatusEffect, StatusEffectDetails};
+
+#[derive(Default, Debug)]
+pub struct PlayerGameStats {
+    pub hp: i64,
+    pub max_hp: i64
+}
+
 #[derive(Debug)]
-pub struct DamageData {
+pub struct DamageEvent<'a> {
+    pub is_valid: bool,
+    pub is_battle_item: bool,
+    pub hit_flag: HitFlag,
+    pub hit_option: HitOption,
     pub skill_id: u32,
-    pub skill_effect_id: u32,
+    pub skill_effect_id: Option<u32>,
     pub damage: i64,
-    pub modifier: i32,
     pub target_current_hp: i64,
     pub target_max_hp: i64,
-    pub damage_attribute: Option<u8>,
-    pub damage_type: u8,
+    pub owner_entity: &'a Entity,
+    pub source_entity: &'a Entity,
+    pub target_entity: Entity,
+    pub timestamp: i64,
+    pub se_on_source: Vec<StatusEffectDetails>,
+    pub se_on_source_ids: Vec<u32>,
+    pub se_on_target: Vec<StatusEffectDetails>,
+    pub se_on_target_ids: Vec<u32>,
+}
+
+pub struct DamageResult {
+    pub is_raid_start: bool,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]

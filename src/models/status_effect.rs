@@ -101,11 +101,25 @@ pub enum StatusEffectType {
     HardCrowdControl = 2, // stun, root, MC, etc
 }
 
+impl From<&str> for StatusEffectType {
+    fn from(value: &str) -> Self {
+        match value {
+            "shield" => StatusEffectType::Shield,
+            "freeze" | "fear" | "stun" | "sleep" | "earthquake" | "electrocution"
+            | "polymorph_pc" | "forced_move" | "mind_control" | "paralyzation" => {
+                StatusEffectType::HardCrowdControl
+            }
+            _ => StatusEffectType::Other,
+        }
+    }
+}
+
 #[derive(Debug, Default, Clone)]
 pub struct StatusEffectDetails {
     pub instance_id: u32,
     pub status_effect_id: u32,
     pub custom_id: u32,
+    pub source_skills: Vec<u32>,
 
     /// Character Id
     pub target_id: u64,
@@ -126,6 +140,16 @@ pub struct StatusEffectDetails {
 }
 
 impl StatusEffectDetails {
+
+    pub fn is_valid_for_raid(&self) -> bool {
+        (self.buff_category == StatusEffectBuffCategory::BattleItem
+            || self.buff_category == StatusEffectBuffCategory::Bracelet
+            || self.buff_category == StatusEffectBuffCategory::Elixir
+            || self.buff_category == StatusEffectBuffCategory::Etc)
+            && self.category == StatusEffectCategory::Debuff
+            && self.show_type == StatusEffectShowType::All
+    }
+
     pub fn is_infinite(&self) -> bool {
         // infinite if duration is (sub-)zero or longer than an hour
         self.expiration_delay <= 0.0 || self.expiration_delay > 3600.0
