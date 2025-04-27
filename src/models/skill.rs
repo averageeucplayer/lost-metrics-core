@@ -1,6 +1,6 @@
 use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
-use crate::models::utils::int_or_string_as_string;
+use crate::models::{utils::int_or_string_as_string, BerserkerSkills};
 
 use super::misc::{PassiveOption, SkillFeatureOption};
 
@@ -86,7 +86,6 @@ pub struct Skill {
     #[serde(skip)]
     pub last_timestamp: i64,
 }
-
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]

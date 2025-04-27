@@ -13,6 +13,7 @@ mod encounter_entity;
 mod stats_api;
 mod class;
 mod class_skills;
+mod engraving;
 
 pub use class::Class;
 pub use class_skills::*;
@@ -29,3 +30,4 @@ pub use summary::*;
 pub use combat_effect::*;
 pub use encounter_entity::*;
 pub use stats_api::*;
+pub use engraving::*;

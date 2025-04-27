@@ -1,8 +1,11 @@
 use hashbrown::{HashMap, HashSet};
+use log::info;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use serde_with::DefaultOnError;
 use std::fmt::{self, Display, Formatter};
+
+use crate::models::IncapacitationEventType;
 
 use super::entity::EntityType;
 use super::player::ArkPassiveData;
@@ -134,6 +137,69 @@ impl EncounterEntity {
                 // cap duration to death time if it exceeds it
                 x.duration = x.timestamp - self.damage_stats.death_time;
             });
+    }
+
+    pub fn update_incapacitation(
+        &mut self,
+        down_time: f32,
+        stand_up_time: Option<f32>,
+        move_time: Option<f32>,
+        timestamp: i64,
+    ) {
+       
+        let total_incapacitated_time = down_time
+            + move_time.unwrap_or_default()
+            + stand_up_time.unwrap_or_default();
+        let incapacitated_time_ms = (total_incapacitated_time * 1000.0) as i64;
+
+        let prev_incapacitation = self
+            .damage_stats
+            .incapacitations
+            .iter_mut()
+            .rev()
+            .take_while(|e| e.timestamp + e.duration > timestamp)
+            .find(|x| x.event_type == IncapacitationEventType::FallDown);
+
+        if let Some(prev_incapacitation) = prev_incapacitation {
+            info!(
+                "Shortening down duration from {} to {} because of new abnormal move",
+                prev_incapacitation.duration,
+                timestamp - prev_incapacitation.timestamp
+            );
+            prev_incapacitation.duration = timestamp - prev_incapacitation.timestamp;
+        }
+
+        let new_event = IncapacitatedEvent {
+            timestamp,
+            duration: incapacitated_time_ms,
+            event_type: IncapacitationEventType::FallDown,
+        };
+        self.damage_stats.incapacitations.push(new_event);
+
+        info!(
+            "Player {} will be incapacitated for {}ms",
+            self.name, incapacitated_time_ms
+        );
+    }
+
+    pub fn shorten_incapacitation(&mut self, timestamp: i64) {
+        let events = self
+            .damage_stats
+            .incapacitations
+            .iter_mut()
+            .rev()
+            .take_while(|x| x.timestamp + x.duration > timestamp)
+            .filter(|x| x.event_type == IncapacitationEventType::FallDown);
+
+        for ongoing_event in events
+        {
+            info!(
+                "Shortening down duration from {} to {} because of getup skill",
+                ongoing_event.duration,
+                timestamp - ongoing_event.timestamp
+            );
+            ongoing_event.duration = timestamp - ongoing_event.timestamp;
+        }
     }
 }
 
